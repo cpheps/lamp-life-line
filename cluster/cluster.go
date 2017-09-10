@@ -43,16 +43,16 @@ func (c *Cluster) RegisterLamp(lamp *Lamp) {
 
 //UnRegisterLamp removes a lamp from the cluster. Returns an error if no lamp was found
 func (c *Cluster) UnRegisterLamp(id string) (*Lamp, error) {
-	fmt.Printf("Ungregistering Lamp <%s> from Cluster <%s>\n", id, *c.Name)
+	fmt.Printf("Unregistering Lamp <%s> from Cluster <%s>\n", id, *c.Name)
 	lamp := c.Lamps[id]
 
 	if lamp == nil {
-		fmt.Printf("Failed to ungregister Lamp <%s> from Cluster <%s>\n", id, *c.Name)
-		return nil, fmt.Errorf("No lamp containing id %s in cluster", id)
+		fmt.Printf("Failed to unregister Lamp <%s> from Cluster <%s>\n", id, *c.Name)
+		return nil, fmt.Errorf("No lamp with id <%s> in cluster", id)
 	}
 
 	lamp.ClusterID = nil
 
-	fmt.Printf("Successfully ungregistered Lamp <%s> from Cluster <%s>\n", id, *c.Name)
+	fmt.Printf("Successfully unregistered Lamp <%s> from Cluster <%s>\n", id, *c.Name)
 	return lamp, nil
 }
