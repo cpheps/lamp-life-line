@@ -24,5 +24,5 @@ run:
 
 test:
 #Add other package tests here
-	go test -v github.com/cpheps/lamp-life-line/...
+	go test -v ./...
 	
