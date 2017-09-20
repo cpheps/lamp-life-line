@@ -54,6 +54,24 @@ func (m *Manager) GetCluster(clusterID string) (*Cluster, error) {
 	return cluster, nil
 }
 
+//UnregisterCluster removes the cluster form the manager.
+//Returns an error if no cluster is found
+func (m *Manager) UnregisterCluster(id string) (*Cluster, error) {
+	fmt.Printf("Unregistering new Cluster with id <%s>", id)
+	cluster := m.clusterCache[id]
+
+	if cluster == nil {
+		fmt.Printf("Failed to ungregister Cluster with id <%s>", id)
+		return nil, fmt.Errorf("No Cluster with id <%s> in cache", id)
+	}
+
+	delete(m.clusterCache, id)
+
+	fmt.Printf("Unregistered Cluster <%s> with assigned id <%s>", *cluster.Name, id)
+
+	return cluster, nil
+}
+
 //TODO add remove function
 
 func generateUUID(clusterCache map[string]*Cluster) string {

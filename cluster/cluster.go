@@ -51,6 +51,7 @@ func (c *Cluster) UnRegisterLamp(id string) (*Lamp, error) {
 		return nil, fmt.Errorf("No lamp with id <%s> in cluster", id)
 	}
 
+	delete(c.Lamps, id)
 	lamp.ClusterID = nil
 
 	fmt.Printf("Successfully unregistered Lamp <%s> from Cluster <%s>\n", id, *c.Name)
