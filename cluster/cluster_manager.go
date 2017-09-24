@@ -34,12 +34,12 @@ func createManager() *Manager {
 
 //RegisterNewCluster creates a new cluster and registers to manager
 func (m *Manager) RegisterNewCluster(name string) *Cluster {
-	fmt.Printf("Registering new Cluster with name <%s>", name)
+	fmt.Printf("Registering new Cluster with name <%s>\n", name)
 	clusterID := generateUUID(m.clusterCache)
 	cluster := CreateCluster(&clusterID, &name)
 	m.clusterCache[clusterID] = cluster
 
-	fmt.Printf("Registered Cluster <%s> with assigned id <%s>", name, clusterID)
+	fmt.Printf("Registered Cluster <%s> with assigned id <%s>\n", name, clusterID)
 	return cluster
 }
 
@@ -57,22 +57,20 @@ func (m *Manager) GetCluster(clusterID string) (*Cluster, error) {
 //UnregisterCluster removes the cluster form the manager.
 //Returns an error if no cluster is found
 func (m *Manager) UnregisterCluster(id string) (*Cluster, error) {
-	fmt.Printf("Unregistering new Cluster with id <%s>", id)
+	fmt.Printf("Unregistering new Cluster with id <%s>\n", id)
 	cluster := m.clusterCache[id]
 
 	if cluster == nil {
-		fmt.Printf("Failed to ungregister Cluster with id <%s>", id)
+		fmt.Printf("Failed to ungregister Cluster with id <%sn", id)
 		return nil, fmt.Errorf("No Cluster with id <%s> in cache", id)
 	}
 
 	delete(m.clusterCache, id)
 
-	fmt.Printf("Unregistered Cluster <%s> with assigned id <%s>", *cluster.Name, id)
+	fmt.Printf("Unregistered Cluster <%s> with assigned id <%s>\n", *cluster.Name, id)
 
 	return cluster, nil
 }
-
-//TODO add remove function
 
 func generateUUID(clusterCache map[string]*Cluster) string {
 	id := uuid.NewV4().String()

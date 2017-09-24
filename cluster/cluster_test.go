@@ -4,15 +4,15 @@ import (
 	"testing"
 )
 
-var clusterName = "Test"
+var testClusterName = "Test"
 
 func TestCreateCluster(t *testing.T) {
 	cluster := createTestCluster()
 
-	if *cluster.ID != clusterID {
-		t.Errorf("Expected id %s got %s", clusterID, *cluster.ID)
-	} else if *cluster.Name != clusterName {
-		t.Errorf("Expected name %s got %s", clusterName, *cluster.Name)
+	if *cluster.ID != testClusterID {
+		t.Errorf("Expected id %s got %s", testClusterID, *cluster.ID)
+	} else if *cluster.Name != testClusterName {
+		t.Errorf("Expected name %s got %s", testClusterName, *cluster.Name)
 	} else if cluster.Lamps == nil {
 		t.Error("Expected Lamps map to be initialized")
 	}
@@ -21,19 +21,19 @@ func TestCreateCluster(t *testing.T) {
 func TestRegisterNewLamp(t *testing.T) {
 	cluster := createTestCluster()
 
-	lamp := cluster.RegisterNewLamp(lampID, listenAddress)
+	lamp := cluster.RegisterNewLamp(testLampID, testListenAddress)
 
-	if *lamp.ID != lampID {
-		t.Errorf("Expected ID %s got %s", lampID, *lamp.ID)
-	} else if *lamp.ClusterID != clusterID {
-		t.Errorf("Expected ClusterID %s got %s", clusterID, *lamp.ClusterID)
-	} else if *lamp.ListenAddress != listenAddress {
-		t.Errorf("Expected Listen Address %s got %s", listenAddress, *lamp.ListenAddress)
+	if *lamp.ID != testLampID {
+		t.Errorf("Expected ID %s got %s", testLampID, *lamp.ID)
+	} else if *lamp.ClusterID != testClusterID {
+		t.Errorf("Expected ClusterID %s got %s", testClusterID, *lamp.ClusterID)
+	} else if *lamp.ListenAddress != testListenAddress {
+		t.Errorf("Expected Listen Address %s got %s", testListenAddress, *lamp.ListenAddress)
 	}
 
-	cacheLamp := cluster.Lamps[lampID]
+	cacheLamp := cluster.Lamps[testLampID]
 	if cacheLamp == nil {
-		t.Errorf("No lamp found matching id %s", lampID)
+		t.Errorf("No lamp found matching id %s", testLampID)
 	}
 
 	if cacheLamp != lamp {
@@ -43,12 +43,12 @@ func TestRegisterNewLamp(t *testing.T) {
 
 func TestRegisterLamp(t *testing.T) {
 	cluster := createTestCluster()
-	lamp := createLamp(lampID, clusterID, listenAddress)
+	lamp := createLamp(testLampID, testClusterID, testListenAddress)
 	cluster.RegisterLamp(lamp)
 
-	cacheLamp := cluster.Lamps[lampID]
+	cacheLamp := cluster.Lamps[testLampID]
 	if cacheLamp == nil {
-		t.Errorf("No lamp found matching id %s", lampID)
+		t.Errorf("No lamp found matching id %s", testLampID)
 	}
 
 	if cacheLamp != lamp {
@@ -58,7 +58,7 @@ func TestRegisterLamp(t *testing.T) {
 
 func TestUnRegisterLamp(t *testing.T) {
 	cluster := createTestCluster()
-	lamp := createLamp(lampID, clusterID, listenAddress)
+	lamp := createLamp(testLampID, testClusterID, testListenAddress)
 
 	unregisterLamp, err := cluster.UnRegisterLamp(*lamp.ID)
 	if err == nil {
@@ -81,5 +81,5 @@ func TestUnRegisterLamp(t *testing.T) {
 }
 
 func createTestCluster() *Cluster {
-	return CreateCluster(&clusterID, &clusterName)
+	return CreateCluster(&testClusterID, &testClusterName)
 }
