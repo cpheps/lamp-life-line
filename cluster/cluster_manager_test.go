@@ -5,9 +5,9 @@ import (
 )
 
 func TestGetInstance(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 
-	secondManager := GetInstance()
+	secondManager := GetManagerInstance()
 
 	if manager != secondManager {
 		t.Error("Returned two separate pointesr for singleton")
@@ -15,7 +15,7 @@ func TestGetInstance(t *testing.T) {
 }
 
 func TestRegisterNewCluster(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 	clearManager()
 
 	cluster := manager.RegisterNewCluster(testClusterName)
@@ -34,7 +34,7 @@ func TestRegisterNewCluster(t *testing.T) {
 }
 
 func TestGetCluster(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 	clearManager()
 	cluster := createTestCluster()
 
@@ -56,7 +56,7 @@ func TestGetCluster(t *testing.T) {
 }
 
 func TestUnregisterCluster(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 	clearManager()
 	cluster := createTestCluster()
 
@@ -96,7 +96,7 @@ func TestGenerateUUID(t *testing.T) {
 }
 
 func clearManager() {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 
 	for k := range manager.clusterCache {
 		delete(manager.clusterCache, k)

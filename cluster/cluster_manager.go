@@ -16,8 +16,8 @@ type Manager struct {
 var instance *Manager
 var once sync.Once
 
-//GetInstance returns singleton ClusterManager
-func GetInstance() *Manager {
+//GetManagerInstance returns singleton ClusterManager
+func GetManagerInstance() *Manager {
 	once.Do(func() {
 		instance = createManager()
 	})
@@ -52,6 +52,16 @@ func (m *Manager) GetCluster(clusterID string) (*Cluster, error) {
 	}
 
 	return cluster, nil
+}
+
+//GetClusters returns all clusters being managed
+func (m *Manager) GetClusters() []*Cluster {
+	clusters := make([]*Cluster, 0, len(m.clusterCache))
+	for _, cluster := range m.clusterCache {
+		clusters = append(clusters, cluster)
+	}
+
+	return clusters
 }
 
 //UnregisterCluster removes the cluster form the manager.

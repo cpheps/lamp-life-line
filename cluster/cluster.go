@@ -8,9 +8,10 @@ import (
 
 //Cluster represents a cluster of Lamps
 type Cluster struct {
-	ID    *string
-	Name  *string
-	Lamps map[string]*Lamp
+	ID    *string          `json:"id"`
+	Name  *string          `json:"name"`
+	Lamps map[string]*Lamp `json:"lamps"`
+	//TODO Current cluster color
 }
 
 //CreateCluster creates a new cluster instance
