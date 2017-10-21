@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/cpheps/lamp-life-line/cluster"
 	"io"
 	"net/http"
@@ -11,6 +12,9 @@ func lampHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		processLampPost(w, r)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		io.WriteString(w, fmt.Sprintf("Method %s not supported", r.Method))
 	}
 }
 

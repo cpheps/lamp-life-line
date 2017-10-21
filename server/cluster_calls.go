@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -14,6 +15,9 @@ func clusterHandler(w http.ResponseWriter, r *http.Request) {
 		processClusterPost(w, r)
 	case http.MethodGet:
 		processClusterGet(w, r)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		io.WriteString(w, fmt.Sprintf("Method %s not supported", r.Method))
 	}
 }
 
