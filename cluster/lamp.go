@@ -4,9 +4,9 @@ package cluster
 
 //Lamp is a single lamp within a cluster
 type Lamp struct {
-	ID            *string
-	ClusterID     *string
-	ListenAddress *string
+	ID            *string `json:"id"`
+	ClusterID     *string `json:"clusterId"`
+	ListenAddress *string `json:"-"`
 	//need some variable for color, will hold until color api is explored better
 }
 

@@ -2,13 +2,10 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/cpheps/lamp-life-line/cluster"
-	"github.com/jmoiron/jsonq"
 )
 
 func clusterHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +27,7 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, invalidRequest+": property 'name' not found")
+		return
 	}
 
 	cluster := cluster.GetManagerInstance().RegisterNewCluster(name)
@@ -38,6 +36,7 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Error registering new Cluster")
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -57,19 +56,26 @@ func processClusterGet(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			io.WriteString(w, "Error getting Clusters")
+			return
 		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(bytes)
+		return
 	}
 
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "Error Cluster not found")
+		return
 	}
 
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Error getting Cluster")
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

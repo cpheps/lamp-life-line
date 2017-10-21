@@ -2,10 +2,12 @@
 
 **Under Construction**
 
-# Support REST Calls
+## Support REST Calls
 
-## Register New Cluster
+### Register New Cluster
 Creates a new cluster with the given `name`.
+
+    Endpoint: `/cluster`
 
     Method: POST
 
@@ -17,8 +19,10 @@ Creates a new cluster with the given `name`.
     }
     ```
 
-## Get Cluster
+### Get Cluster(s)
 Returns a list of clusters if no `id` is present in the json. If `id` is present return a cluster associated with the `id`.
+
+    Endpoint: `/cluster`
 
     Method: GET
 
@@ -27,5 +31,21 @@ Returns a list of clusters if no `id` is present in the json. If `id` is present
     ```
     {
         "id": "uuid_of_cluster"
+    }
+    ```
+
+### Register New Lamp
+Creates a new lamp with the given `id` and registers to cluster matching `clusterId`
+
+    Endpoint: `/lamp`
+
+    Method: POST
+
+    JSON:
+
+    ```
+    {
+        "id": "lamp_mac_address",
+        "clusterId": "uuid_of_cluster"
     }
     ```

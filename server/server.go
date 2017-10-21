@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	invalidRequest = "Invalid JSON"
+	invalidRequest  = "Invalid JSON"
+	clusterNotFound = "Cluster Not Found"
 )
 
 func StartServer() <-chan error {
@@ -36,13 +37,9 @@ func StartServer() <-chan error {
 }
 
 func initHandlers() {
-	http.HandleFunc("/register-cluster", clusterHandler)
-	http.HandleFunc("/register-lamp", lampHandlers)
+	http.HandleFunc("/cluster", clusterHandler)
+	http.HandleFunc("/lamp", lampHandler)
 	http.HandleFunc("/color", colorHandler)
-}
-
-func lampHandlers(w http.ResponseWriter, r *http.Request) {
-	//Post will create lamp and return json for it
 }
 
 func colorHandler(w http.ResponseWriter, r *http.Request) {

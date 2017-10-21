@@ -24,22 +24,31 @@ func CreateCluster(id, name *string) *Cluster {
 }
 
 //RegisterNewLamp creates a new lamp and registers it to this cluster
-func (c *Cluster) RegisterNewLamp(id, listenAddress string) *Lamp {
+func (c *Cluster) RegisterNewLamp(id, listenAddress string) (*Lamp, error) {
 	fmt.Printf("Registering new Lamp with ID <%s> and ListenAddress <%s> to Cluster <%s>\n", id, listenAddress, *c.Name)
+	if _, ok := c.Lamps[id]; ok {
+		return nil, fmt.Errorf("Lamp with ID <%s> already exists in cluster <%s>", id, *c.ID)
+	}
 
 	lamp := createLamp(id, *c.ID, listenAddress)
 	c.Lamps[*lamp.ID] = lamp
+	//TODO set color of lamp
 
 	fmt.Printf("Registered a new lamp <%s>", *lamp.ID)
-	return lamp
+	return lamp, nil
 }
 
 //RegisterLamp registers an existing lamp to this cluster
-func (c *Cluster) RegisterLamp(lamp *Lamp) {
+func (c *Cluster) RegisterLamp(lamp *Lamp) error {
 	fmt.Printf("Registering existing Lamp with ID <%s> and ListenAddress <%s> to Cluster <%s>\n", *lamp.ID, *lamp.ListenAddress, *c.Name)
+	if _, ok := c.Lamps[*lamp.ID]; ok {
+		return fmt.Errorf("A lamp with ID <%s> already exists in cluster <%s>", *lamp.ID, *c.ID)
+	}
+
 	c.Lamps[*lamp.ID] = lamp
 	lamp.ClusterID = c.ID
 	fmt.Printf("Registered existing lamp <%s>\n", *lamp.ID)
+	return nil
 }
 
 //UnRegisterLamp removes a lamp from the cluster. Returns an error if no lamp was found
