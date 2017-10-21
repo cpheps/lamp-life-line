@@ -15,6 +15,8 @@ func clusterHandler(w http.ResponseWriter, r *http.Request) {
 		processClusterPost(w, r)
 	case http.MethodGet:
 		processClusterGet(w, r)
+	case http.MethodDelete:
+
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		io.WriteString(w, fmt.Sprintf("Method %s not supported", r.Method))
@@ -84,4 +86,35 @@ func processClusterGet(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
+}
+
+func processClusterDelete(w http.ResponseWriter, r *http.Request) {
+	jq, err := parseJSON(w, r)
+	if err != nil {
+		return
+	}
+
+	id, err := jq.String("id")
+	if err != nil {
+		clusters := cluster.GetManagerInstance().GetClusters()
+		bytes, err := json.Marshal(clusters)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, "Error getting Clusters")
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(bytes)
+		return
+	}
+
+	_, err = cluster.GetManagerInstance().UnregisterCluster(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		io.WriteString(w, err.Error())
+	}
+
+	w.WriteHeader(http.StatusOK)
+	io.WriteString(w, "Successfully unregistred cluster")
 }

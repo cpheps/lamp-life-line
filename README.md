@@ -34,6 +34,21 @@ Returns a list of clusters if no `id` is present in the json. If `id` is present
     }
     ```
 
+### Unregister Cluster
+Removes a cluster with the given `id`.
+
+    Endpoint: `/cluster`
+
+    Method: DELETE
+
+    JSON:
+
+    ```
+    {
+        "id": "uuid_of_cluster"
+    }
+    ```
+
 ### Register New Lamp
 Creates a new lamp with the given `id` and registers to cluster matching `clusterId`
 
