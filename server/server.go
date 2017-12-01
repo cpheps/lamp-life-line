@@ -41,11 +41,6 @@ func initHandlers() {
 	http.HandleFunc("/color", colorHandler)
 }
 
-func colorHandler(w http.ResponseWriter, r *http.Request) {
-	//Get will return cluster color
-	//Put will change color
-}
-
 func parseJSON(w http.ResponseWriter, r *http.Request) (*jsonq.JsonQuery, error) {
 	resp := make(map[string]interface{})
 	body, err := ioutil.ReadAll(r.Body)

@@ -16,7 +16,7 @@ func clusterHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		processClusterGet(w, r)
 	case http.MethodDelete:
-
+		processClusterDelete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		io.WriteString(w, fmt.Sprintf("Method %s not supported", r.Method))
