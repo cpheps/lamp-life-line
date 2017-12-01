@@ -38,7 +38,6 @@ func StartServer() <-chan error {
 
 func initHandlers() {
 	http.HandleFunc("/cluster", clusterHandler)
-	http.HandleFunc("/lamp", lampHandler)
 	http.HandleFunc("/color", colorHandler)
 }
 
