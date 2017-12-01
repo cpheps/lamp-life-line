@@ -22,8 +22,3 @@ func main() {
 		fmt.Printf("Error running Lamp Life Line: %s\n", err.Error())
 	}
 }
-
-//Minimum Handlers to Launch
-//Register Cluster
-//Register Lamp
-//Change Color
