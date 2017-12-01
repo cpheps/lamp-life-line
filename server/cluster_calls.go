@@ -57,13 +57,7 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func processClusterGet(w http.ResponseWriter, r *http.Request) {
-	jq, err := parseJSON(w, r)
-	if err != nil {
-		return
-	}
-
-	id, err := jq.String("id")
-	if err != nil {
+	if r.Body == http.NoBody {
 		clusters := cluster.GetManagerInstance().GetClusters()
 		bytes, err := json.Marshal(clusters)
 		if err != nil {
@@ -77,17 +71,29 @@ func processClusterGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jq, err := parseJSON(w, r)
+	if err != nil {
+		return
+	}
+
+	id, err := jq.String("id")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(formatErrorJson(invalidRequest + ": property 'id' not found"))
+		return
+	}
+
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(formatErrorJson("Error Cluster not found"))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(formatErrorJson("Cluster not found"))
 		return
 	}
 
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(formatErrorJson("Error getting Cluster"))
+		w.Write(formatErrorJson("getting Cluster"))
 		return
 	}
 
@@ -118,10 +124,10 @@ func processClusterDelete(w http.ResponseWriter, r *http.Request) {
 
 	_, err = cluster.GetManagerInstance().UnregisterCluster(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadRequest)
 		w.Write(formatErrorJson(err.Error()))
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(formatErrorJson("Successfully unregistred cluster"))
 }

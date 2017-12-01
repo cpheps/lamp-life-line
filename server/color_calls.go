@@ -43,8 +43,8 @@ func processColorPut(w http.ResponseWriter, r *http.Request) {
 
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(formatErrorJson("Error Cluster not found"))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(formatErrorJson("Cluster not found"))
 		return
 	}
 
@@ -54,7 +54,7 @@ func processColorPut(w http.ResponseWriter, r *http.Request) {
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(formatErrorJson("Error getting Cluster"))
+		w.Write(formatErrorJson("getting Cluster"))
 		return
 	}
 
@@ -77,8 +77,8 @@ func processColorGet(w http.ResponseWriter, r *http.Request) {
 
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(formatErrorJson("Error Cluster not found"))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(formatErrorJson("Cluster not found"))
 		return
 	}
 

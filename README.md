@@ -33,10 +33,18 @@ Returns a list of clusters if no `id` is present in the json. If `id` is present
 
     Method: GET
 
-    JSON:
+    Request JSON:
 
     {
         "id": "uuid_of_cluster"
+    }
+
+    Response JSON:
+
+    {
+        "id": "uuid_of_cluster",
+        "name": "Cluster Name",
+        "color": 32_bit_color_int
     }
 
 ### Unregister Cluster
@@ -46,7 +54,7 @@ Removes a cluster with the given `id`.
 
     Method: DELETE
 
-    JSON:
+    Request JSON:
 
     {
         "id": "uuid_of_cluster"
@@ -59,10 +67,18 @@ Changes the color for a cluster with a given `id`.
 
     Method: PUT
 
-    JSON:
+    Request JSON:
 
     {
         "id": "uuid_of_cluster",
+        "color": 32_bit_color_int
+    }
+
+    Response JSON:
+
+    {
+        "id": "uuid_of_cluster",
+        "name": "Cluster Name",
         "color": 32_bit_color_int
     }
 
@@ -73,8 +89,14 @@ Retrieves the color for a cluster with a given `id`.
 
     Method: GET
 
-    JSON:
+    Request JSON:
 
     {
         "id": "uuid_of_cluster"
+    }
+
+    Response JSON:
+
+    {
+        "color": 32_bit_color_int
     }

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -18,6 +17,7 @@ const (
 	clusterNotFound = "Cluster Not Found"
 )
 
+//StartServer creats a new server on the given port
 func StartServer() <-chan error {
 	fmt.Println("Starting Server")
 	errors := make(chan error, 1)
@@ -47,14 +47,14 @@ func parseJSON(w http.ResponseWriter, r *http.Request) (*jsonq.JsonQuery, error)
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, invalidRequest)
+		w.Write(formatErrorJson(invalidRequest))
 		return nil, errors.New(invalidRequest)
 	}
 
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, invalidRequest)
+		w.Write(formatErrorJson(invalidRequest))
 		return nil, errors.New(invalidRequest)
 	}
 
