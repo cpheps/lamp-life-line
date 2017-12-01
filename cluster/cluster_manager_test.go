@@ -5,9 +5,9 @@ import (
 )
 
 func TestGetInstance(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 
-	secondManager := GetInstance()
+	secondManager := GetManagerInstance()
 
 	if manager != secondManager {
 		t.Error("Returned two separate pointesr for singleton")
@@ -15,7 +15,8 @@ func TestGetInstance(t *testing.T) {
 }
 
 func TestRegisterNewCluster(t *testing.T) {
-	manager := GetInstance()
+	testClusterName := "name"
+	manager := GetManagerInstance()
 	clearManager()
 
 	cluster := manager.RegisterNewCluster(testClusterName)
@@ -34,9 +35,10 @@ func TestRegisterNewCluster(t *testing.T) {
 }
 
 func TestGetCluster(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 	clearManager()
-	cluster := createTestCluster()
+	id, name, color := "id", "cluster", int32(42)
+	cluster := CreateCluster(&id, &name, &color)
 
 	_, err := manager.GetCluster(*cluster.ID)
 
@@ -56,9 +58,11 @@ func TestGetCluster(t *testing.T) {
 }
 
 func TestUnregisterCluster(t *testing.T) {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 	clearManager()
-	cluster := createTestCluster()
+
+	id, name, color := "id", "cluster", int32(42)
+	cluster := CreateCluster(&id, &name, &color)
 
 	_, err := manager.UnregisterCluster(*cluster.ID)
 
@@ -95,8 +99,27 @@ func TestGenerateUUID(t *testing.T) {
 	}
 }
 
+func TestGetClusters(t *testing.T) {
+	manager := GetManagerInstance()
+	clearManager()
+
+	idOne, idTwo, name, color := "id", "idTwo", "cluster", int32(42)
+	clusterOne := CreateCluster(&idOne, &name, &color)
+	clusterTwo := CreateCluster(&idTwo, &name, &color)
+
+	manager.clusterCache[*clusterOne.ID] = clusterOne
+	manager.clusterCache[*clusterTwo.ID] = clusterTwo
+
+	clusters := manager.GetClusters()
+
+	if length := len(clusters); length != 2 {
+		t.Errorf("Expected 2 clusters got %d", length)
+	}
+
+}
+
 func clearManager() {
-	manager := GetInstance()
+	manager := GetManagerInstance()
 
 	for k := range manager.clusterCache {
 		delete(manager.clusterCache, k)
