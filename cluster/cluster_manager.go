@@ -36,7 +36,9 @@ func createManager() *Manager {
 func (m *Manager) RegisterNewCluster(name string) *Cluster {
 	fmt.Printf("Registering new Cluster with name <%s>\n", name)
 	clusterID := generateUUID(m.clusterCache)
-	cluster := CreateCluster(&clusterID, &name)
+	deafultColor := int32(0)
+
+	cluster := CreateCluster(&clusterID, &name, &deafultColor)
 	m.clusterCache[clusterID] = cluster
 
 	fmt.Printf("Registered Cluster <%s> with assigned id <%s>\n", name, clusterID)

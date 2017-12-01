@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"net/http"
-)
+import "fmt"
 
 //Version current version of the Lamp Life Line server
 var Version string
