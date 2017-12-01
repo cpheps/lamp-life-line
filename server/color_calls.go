@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/cpheps/lamp-life-line/cluster"
@@ -18,7 +17,7 @@ func colorHandler(w http.ResponseWriter, r *http.Request) {
 		processColorGet(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		io.WriteString(w, fmt.Sprintf("Method %s not supported", r.Method))
+		w.Write(formatErrorJson(fmt.Sprintf("Method %s not supported", r.Method)))
 	}
 }
 
@@ -31,21 +30,21 @@ func processColorPut(w http.ResponseWriter, r *http.Request) {
 	id, err := jq.String("id")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, invalidRequest+": property 'id' not found")
+		w.Write(formatErrorJson(invalidRequest + ": property 'id' not found"))
 		return
 	}
 
 	color, err := jq.Int("color")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, invalidRequest+": property 'color' not found")
+		w.Write(formatErrorJson(invalidRequest + ": property 'color' not found"))
 		return
 	}
 
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, "Error Cluster not found")
+		w.Write(formatErrorJson("Error Cluster not found"))
 		return
 	}
 
@@ -55,7 +54,7 @@ func processColorPut(w http.ResponseWriter, r *http.Request) {
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, "Error getting Cluster")
+		w.Write(formatErrorJson("Error getting Cluster"))
 		return
 	}
 
@@ -72,14 +71,14 @@ func processColorGet(w http.ResponseWriter, r *http.Request) {
 	id, err := jq.String("id")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, invalidRequest+": property 'id' not found")
+		w.Write(formatErrorJson(invalidRequest + ": property 'id' not found"))
 		return
 	}
 
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, "Error Cluster not found")
+		w.Write(formatErrorJson("Error Cluster not found"))
 		return
 	}
 

@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/cpheps/lamp-life-line/cluster"
@@ -19,7 +18,7 @@ func clusterHandler(w http.ResponseWriter, r *http.Request) {
 		processClusterDelete(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		io.WriteString(w, fmt.Sprintf("Method %s not supported", r.Method))
+		w.Write(formatErrorJson(fmt.Sprintf("Method %s not supported", r.Method)))
 	}
 }
 
@@ -32,7 +31,7 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 	name, err := jq.String("name")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, invalidRequest+": property 'name' not found")
+		w.Write(formatErrorJson(invalidRequest + ": property 'name' not found"))
 		return
 	}
 
@@ -41,7 +40,7 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, "Error registering new Cluster")
+		w.Write(formatErrorJson("Error registering new Cluster"))
 		return
 	}
 
@@ -61,7 +60,7 @@ func processClusterGet(w http.ResponseWriter, r *http.Request) {
 		bytes, err := json.Marshal(clusters)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "Error getting Clusters")
+			w.Write(formatErrorJson("Error getting Clusters"))
 			return
 		}
 
@@ -73,14 +72,14 @@ func processClusterGet(w http.ResponseWriter, r *http.Request) {
 	cluster, err := cluster.GetManagerInstance().GetCluster(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, "Error Cluster not found")
+		w.Write(formatErrorJson("Error Cluster not found"))
 		return
 	}
 
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, "Error getting Cluster")
+		w.Write(formatErrorJson("Error getting Cluster"))
 		return
 	}
 
@@ -100,7 +99,7 @@ func processClusterDelete(w http.ResponseWriter, r *http.Request) {
 		bytes, err := json.Marshal(clusters)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "Error getting Clusters")
+			w.Write(formatErrorJson("Error getting Clusters"))
 			return
 		}
 
@@ -112,9 +111,9 @@ func processClusterDelete(w http.ResponseWriter, r *http.Request) {
 	_, err = cluster.GetManagerInstance().UnregisterCluster(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, err.Error())
+		w.Write(formatErrorJson(err.Error()))
 	}
 
 	w.WriteHeader(http.StatusOK)
-	io.WriteString(w, "Successfully unregistred cluster")
+	w.Write(formatErrorJson("Successfully unregistred cluster"))
 }

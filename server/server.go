@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -60,4 +61,10 @@ func parseJSON(w http.ResponseWriter, r *http.Request) (*jsonq.JsonQuery, error)
 	jq := jsonq.NewQuery(resp)
 
 	return jq, nil
+}
+
+func formatErrorJson(message string) []byte {
+	var buffer bytes.Buffer
+	buffer.WriteString(fmt.Sprintf("{\"error\":\"%s\"}", message))
+	return buffer.Bytes()
 }
