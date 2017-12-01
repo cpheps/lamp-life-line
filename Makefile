@@ -6,7 +6,7 @@ BUILD_TIME=`date +%FT%T%z`
 
 LDFLAGS=-ldflags "-X github.com/cpheps/lamp-life-line/application.Version=${VERSION} -X github.com/cpheps/lamp-life-line/application.BuildTime=${BUILD_TIME}"
 
-.PHONY: build clean fmt run deploy test
+.PHONY: build clean fmt run vet imports test
 default: build
 
 build: | clean
@@ -16,11 +16,17 @@ clean:
 	if [ -f /bin/${BINARY} ] ; then rm bin/${BINARY} ; fi
 	if [ -f /bin/application ] ; then rm bin/application ; fi
 
-fmt:
+fmt: imports
 	go fmt github.com/cpheps/lamp-life-line/...
 
 run:
 	go run application.go
+
+vet:
+	go tool vet .
+
+imports:
+	goimports -w .
 
 test:
 #Add other package tests here
