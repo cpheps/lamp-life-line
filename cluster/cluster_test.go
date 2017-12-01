@@ -20,10 +20,11 @@ func TestCreateCluster(t *testing.T) {
 
 func TestRegisterNewLamp(t *testing.T) {
 	cluster := createTestCluster()
+	lamp, err := cluster.RegisterNewLamp(testLampID, testListenAddress)
 
-	lamp := cluster.RegisterNewLamp(testLampID, testListenAddress)
-
-	if *lamp.ID != testLampID {
+	if err != nil {
+		t.Errorf("Got unexpected error %s", err.Error())
+	} else if *lamp.ID != testLampID {
 		t.Errorf("Expected ID %s got %s", testLampID, *lamp.ID)
 	} else if *lamp.ClusterID != testClusterID {
 		t.Errorf("Expected ClusterID %s got %s", testClusterID, *lamp.ClusterID)
@@ -38,6 +39,11 @@ func TestRegisterNewLamp(t *testing.T) {
 
 	if cacheLamp != lamp {
 		t.Errorf("Expecting %v in cache found %v", lamp, cacheLamp)
+	}
+
+	_, err = cluster.RegisterNewLamp(*lamp.ID, *lamp.ListenAddress)
+	if err == nil {
+		t.Error("Expected error")
 	}
 }
 
@@ -76,6 +82,25 @@ func TestUnRegisterLamp(t *testing.T) {
 
 	if _, ok := cluster.Lamps[*lamp.ID]; ok {
 		t.Error("Did not remove lamp from cache")
+	}
+
+}
+
+func TestGetLamp(t *testing.T) {
+	cluster := createTestCluster()
+	lamp := createLamp(testLampID, testClusterID, testListenAddress)
+
+	retrieveLamp, err := cluster.GetLamp("nope")
+	if err == nil {
+		t.Errorf("Expected error")
+	}
+
+	cluster.Lamps[*lamp.ID] = lamp
+	retrieveLamp, err = cluster.GetLamp(*lamp.ID)
+	if err != nil {
+		t.Errorf("Got non-nil error: %s", err.Error())
+	} else if retrieveLamp != lamp {
+		t.Errorf("Expected %v got %v", lamp, retrieveLamp)
 	}
 
 }

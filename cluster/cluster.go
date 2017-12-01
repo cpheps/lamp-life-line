@@ -67,3 +67,14 @@ func (c *Cluster) UnRegisterLamp(id string) (*Lamp, error) {
 	fmt.Printf("Successfully unregistered Lamp <%s> from Cluster <%s>\n", id, *c.Name)
 	return lamp, nil
 }
+
+//GetLamp retrieves a lamp with a given id
+func (c *Cluster) GetLamp(id string) (*Lamp, error) {
+	lamp := c.Lamps[id]
+
+	if lamp == nil {
+		return nil, fmt.Errorf("No Lamp with id <%s> found in cluster <%s>", id, *c.Name)
+	}
+
+	return lamp, nil
+}
