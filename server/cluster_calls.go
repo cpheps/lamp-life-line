@@ -35,7 +35,15 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cluster := cluster.GetManagerInstance().RegisterNewCluster(name)
+	color, err := jq.Int("color")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(formatErrorJson(invalidRequest + ": property 'color' not found"))
+		return
+	}
+	color32 := int32(color)
+
+	cluster := cluster.GetManagerInstance().RegisterNewCluster(name, color32)
 
 	bytes, err := json.Marshal(*cluster)
 	if err != nil {

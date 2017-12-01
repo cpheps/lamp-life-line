@@ -15,14 +15,16 @@ func TestGetInstance(t *testing.T) {
 }
 
 func TestRegisterNewCluster(t *testing.T) {
-	testClusterName := "name"
+	testClusterName, color := "name", int32(4)
 	manager := GetManagerInstance()
 	clearManager()
 
-	cluster := manager.RegisterNewCluster(testClusterName)
+	cluster := manager.RegisterNewCluster(testClusterName, color)
 
 	if *cluster.Name != testClusterName {
 		t.Errorf("Expected cluster with name %s got %s", testClusterName, *cluster.Name)
+	} else if *cluster.Color != color {
+		t.Errorf("Expected cluster with color %d got %d", color, *cluster.Color)
 	}
 
 	if cacheCluster, ok := manager.clusterCache[*cluster.ID]; ok {

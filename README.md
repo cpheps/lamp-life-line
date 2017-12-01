@@ -11,10 +11,19 @@ Creates a new cluster with the given `name`.
 
     Method: POST
 
-    JSON: 
+    Request JSON: 
 
     {
-        "name": "Cluster Name"
+        "name": "Cluster Name",
+        "color": 32_bit_color_int
+    }
+
+    Response JSON:
+
+    {
+        "id": "uuid_of_cluster",
+        "name": "Cluster Name",
+        "color": 32_bit_color_int
     }
 
 ### Get Cluster(s)

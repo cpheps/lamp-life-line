@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/cpheps/lamp-life-line/server"
+)
 
 //Version current version of the Lamp Life Line server
 var Version string
@@ -9,7 +13,14 @@ var Version string
 var BuildTime string
 
 func main() {
-	fmt.Printf("Running Lamp Life Line version %s build on %s", Version, BuildTime)
+	fmt.Printf("Running Lamp Life Line version %s build on %s\n", Version, BuildTime)
+
+	errors := server.StartServer()
+
+	err := <-errors
+	if err != nil {
+		fmt.Printf("Error running Lamp Life Line: %s\n", err.Error())
+	}
 }
 
 //Minimum Handlers to Launch
