@@ -33,7 +33,7 @@ func createManager() *Manager {
 }
 
 //RegisterNewCluster creates a new cluster and registers to manager
-func (m *Manager) RegisterNewCluster(name string, color int32) *Cluster {
+func (m *Manager) RegisterNewCluster(name string, color uint32) *Cluster {
 	fmt.Printf("Registering new Cluster with name <%s>\n", name)
 	clusterID := generateUUID(m.clusterCache)
 	cluster := CreateCluster(&clusterID, &name, &color)

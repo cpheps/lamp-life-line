@@ -41,7 +41,7 @@ func processClusterPost(w http.ResponseWriter, r *http.Request) {
 		w.Write(formatErrorJson(invalidRequest + ": property 'color' not found"))
 		return
 	}
-	color32 := int32(color)
+	color32 := uint32(color)
 
 	cluster := cluster.GetManagerInstance().RegisterNewCluster(name, color32)
 

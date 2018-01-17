@@ -15,7 +15,7 @@ func TestGetInstance(t *testing.T) {
 }
 
 func TestRegisterNewCluster(t *testing.T) {
-	testClusterName, color := "name", int32(4)
+	testClusterName, color := "name", uint32(4)
 	manager := GetManagerInstance()
 	clearManager()
 
@@ -39,7 +39,7 @@ func TestRegisterNewCluster(t *testing.T) {
 func TestGetCluster(t *testing.T) {
 	manager := GetManagerInstance()
 	clearManager()
-	id, name, color := "id", "cluster", int32(42)
+	id, name, color := "id", "cluster", uint32(42)
 	cluster := CreateCluster(&id, &name, &color)
 
 	_, err := manager.GetCluster(*cluster.ID)
@@ -63,7 +63,7 @@ func TestUnregisterCluster(t *testing.T) {
 	manager := GetManagerInstance()
 	clearManager()
 
-	id, name, color := "id", "cluster", int32(42)
+	id, name, color := "id", "cluster", uint32(42)
 	cluster := CreateCluster(&id, &name, &color)
 
 	_, err := manager.UnregisterCluster(*cluster.ID)
@@ -105,7 +105,7 @@ func TestGetClusters(t *testing.T) {
 	manager := GetManagerInstance()
 	clearManager()
 
-	idOne, idTwo, name, color := "id", "idTwo", "cluster", int32(42)
+	idOne, idTwo, name, color := "id", "idTwo", "cluster", uint32(42)
 	clusterOne := CreateCluster(&idOne, &name, &color)
 	clusterTwo := CreateCluster(&idTwo, &name, &color)
 

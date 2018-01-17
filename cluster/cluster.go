@@ -4,11 +4,11 @@ package cluster
 type Cluster struct {
 	ID    *string `json:"id"`
 	Name  *string `json:"name"`
-	Color *int32  `json:"color"`
+	Color *uint32 `json:"color"`
 }
 
 //CreateCluster creates a new cluster instance
-func CreateCluster(id, name *string, color *int32) *Cluster {
+func CreateCluster(id, name *string, color *uint32) *Cluster {
 	return &Cluster{
 		ID:    id,
 		Name:  name,

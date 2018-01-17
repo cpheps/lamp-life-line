@@ -7,7 +7,7 @@ import (
 var testClusterName = "Test"
 
 func TestCreateCluster(t *testing.T) {
-	id, name, color := "id", "cluster", int32(42)
+	id, name, color := "id", "cluster", uint32(42)
 	cluster := CreateCluster(&id, &name, &color)
 
 	if *cluster.ID != id {
