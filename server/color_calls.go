@@ -48,7 +48,7 @@ func processColorPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	color32 := int32(color)
+	color32 := uint32(color)
 	cluster.Color = &color32
 
 	bytes, err := json.Marshal(*cluster)
