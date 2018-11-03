@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -11,7 +12,7 @@ import (
 
 //StartServer creats a new server on the given port
 func StartServer() <-chan error {
-	fmt.Println("Starting Server")
+	log.Printf("Starting Server")
 	errors := make(chan error, 1)
 
 	port := os.Getenv("PORT")
@@ -31,7 +32,7 @@ func initRouters() http.Handler {
 	r := mux.NewRouter()
 
 	//v1 routes
-	v1.AddRoutes(r.PathPrefix("/api/v1").Subrouter())
+	v1.AddRoutes(r.PathPrefix("/v1").Subrouter())
 
 	return r
 }

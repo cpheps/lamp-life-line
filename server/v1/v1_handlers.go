@@ -16,17 +16,17 @@ func AddRoutes(r *mux.Router) {
 		Methods(http.MethodPost).
 		HeadersRegexp("Content-Type", "application/json")
 
-	r.HandleFunc("/cluster/{name:[a-zA-Z0-9]+}", handleClusterGet).
+	r.HandleFunc("/cluster/{name:[a-zA-Z0-9_-]+}", handleClusterGet).
 		Methods(http.MethodGet)
 
-	r.HandleFunc("/cluster/{name:[a-zA-Z0-9]+}/color", handleColorGet).
+	r.HandleFunc("/cluster/{name:[a-zA-Z0-9_-]+}/color", handleColorGet).
 		Methods(http.MethodGet)
 
-	r.HandleFunc("/cluster/{name:[a-zA-Z0-9]+}/color", handleColorPut).
+	r.HandleFunc("/cluster/{name:[a-zA-Z0-9_-]+}/color", handleColorPut).
 		Methods(http.MethodPut).
 		HeadersRegexp("Content-Type", "application/json")
 
-	r.HandleFunc("/cluster/{name:[a-zA-Z0-9]+}", handleClusterDelete).
+	r.HandleFunc("/cluster/{name:[a-zA-Z0-9_-]+}", handleClusterDelete).
 		Methods(http.MethodDelete)
 
 	r.HandleFunc("/cluster", handleClusterList).
