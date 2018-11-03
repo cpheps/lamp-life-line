@@ -5,7 +5,7 @@
 ## Support REST Calls
 
 ### Register New Cluster
-Creates a new cluster with the given `name`.
+Creates a new cluster with the given `CLUSTER_NAME`.
 
     Endpoint: /cluster
 
@@ -14,86 +14,78 @@ Creates a new cluster with the given `name`.
     Request JSON: 
 
     {
-        "name": "Cluster Name",
+        "name": "CLUSTER_NAME",
         "color": 32_bit_color_int
     }
 
     Response JSON:
 
     {
-        "id": "uuid_of_cluster",
-        "name": "Cluster Name",
+        "name": "CLUSTER_NAME",
         "color": 32_bit_color_int
     }
 
-### Get Cluster(s)
-Returns a list of clusters if no `id` is present in the json. If `id` is present return a cluster associated with the `id`.
+### Get Cluster
+Returns a list of clusters.
 
     Endpoint: /cluster
 
     Method: GET
 
-    Request JSON:
+    Response JSON:
+    [
+        {
+            "name": "CLUSTER_NAME",
+            "color": 32_bit_color_int
+        }
+    ]
 
-    {
-        "id": "uuid_of_cluster"
-    }
+### Get Cluster
+Returns a clusters with the given `CLUSTER_NAME`.
+
+    Endpoint: /cluster/{{CLUSTER_NAME}}
+
+    Method: GET
 
     Response JSON:
 
     {
-        "id": "uuid_of_cluster",
-        "name": "Cluster Name",
+        "name": "CLUSTER_NAME",
         "color": 32_bit_color_int
     }
 
 ### Unregister Cluster
-Removes a cluster with the given `id`.
+Removes a cluster with the given `CLUSTER_NAME`.
 
-    Endpoint: /cluster
+    Endpoint: /cluster/{{CLUSTER_NAME}}
 
     Method: DELETE
 
-    Request JSON:
-
-    {
-        "id": "uuid_of_cluster"
-    }
-
 ### Change Color
-Changes the color for a cluster with a given `id`.
+Changes the color for a cluster with a given `CLUSTER_NAME`.
 
-    Endpoint: /color
+    Endpoint: /cluster/{{CLUSTER_NAME}}/color
 
     Method: PUT
 
     Request JSON:
 
     {
-        "id": "uuid_of_cluster",
         "color": 32_bit_color_int
     }
 
     Response JSON:
 
     {
-        "id": "uuid_of_cluster",
-        "name": "Cluster Name",
         "color": 32_bit_color_int
     }
 
 ### Get Color
-Retrieves the color for a cluster with a given `id`.
+Retrieves the color for a cluster with a given `CLUSTER_NAME`.
 
-    Endpoint: /color
+    Endpoint: /cluster/{{CLUSTER_NAME}}/color
 
     Method: GET
-
-    Request JSON:
-
-    {
-        "id": "uuid_of_cluster"
-    }
 
     Response JSON:
 

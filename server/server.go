@@ -1,20 +1,12 @@
 package server
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
-	"github.com/jmoiron/jsonq"
-)
-
-const (
-	invalidRequest  = "Invalid JSON"
-	clusterNotFound = "Cluster Not Found"
+	"github.com/cpheps/lamp-life-line/server/v1"
+	"github.com/gorilla/mux"
 )
 
 //StartServer creats a new server on the given port
@@ -27,44 +19,19 @@ func StartServer() <-chan error {
 		port = "5000"
 	}
 
-	initHandlers()
-
 	go func() {
 		defer close(errors)
-		errors <- http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
+		errors <- http.ListenAndServe(fmt.Sprintf(":%s", port), initRouters())
 	}()
 
 	return errors
 }
 
-func initHandlers() {
-	http.HandleFunc("/cluster", clusterHandler)
-	http.HandleFunc("/color", colorHandler)
-}
+func initRouters() http.Handler {
+	r := mux.NewRouter()
 
-func parseJSON(w http.ResponseWriter, r *http.Request) (*jsonq.JsonQuery, error) {
-	resp := make(map[string]interface{})
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(formatErrorJson(invalidRequest))
-		return nil, errors.New(invalidRequest)
-	}
+	//v1 routes
+	v1.AddRoutes(r.PathPrefix("/api/v1").Subrouter())
 
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(formatErrorJson(invalidRequest))
-		return nil, errors.New(invalidRequest)
-	}
-
-	jq := jsonq.NewQuery(resp)
-
-	return jq, nil
-}
-
-func formatErrorJson(message string) []byte {
-	var buffer bytes.Buffer
-	buffer.WriteString(fmt.Sprintf("{\"error\":\"%s\"}", message))
-	return buffer.Bytes()
+	return r
 }

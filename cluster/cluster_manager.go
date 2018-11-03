@@ -1,8 +1,8 @@
 package cluster
 
 import (
-	"fmt"
 	"errors"
+	"log"
 	"sync"
 )
 
@@ -33,11 +33,11 @@ func createManager() *Manager {
 
 //RegisterNewCluster creates a new cluster and registers to manager
 func (m *Manager) RegisterNewCluster(name string, color uint32) *Cluster {
-	fmt.Printf("Registering new Cluster with name <%s>\n", name)
+	log.Printf("Registering new Cluster with name <%s>", name)
 	cluster := CreateCluster(name, color)
 	m.clusterCache[name] = cluster
 
-	fmt.Println("Registered Cluster <",name, ">")
+	log.Printf("Registered Cluster <%s>", name)
 	return cluster
 }
 
@@ -46,7 +46,7 @@ func (m *Manager) GetCluster(clusterName string) (*Cluster, error) {
 	cluster := m.clusterCache[clusterName]
 
 	if cluster == nil {
-		return nil, fmt.Errorf("No cluster with id <%s> found", clusterName)
+		return nil, errors.New("no cluster found")
 	}
 
 	return cluster, nil
@@ -65,17 +65,17 @@ func (m *Manager) GetClusters() []*Cluster {
 //UnregisterCluster removes the cluster form the manager.
 //Returns an error if no cluster is found
 func (m *Manager) UnregisterCluster(name string) (*Cluster, error) {
-	fmt.Println("Unregistering new Cluster with id <", name, ">")
+	log.Printf("Unregistering new Cluster with name <%s>", name)
 	cluster := m.clusterCache[name]
 
 	if cluster == nil {
-		fmt.Println("Failed to unregister Cluster with id <", name, ">")
+		log.Printf("Failed to unregister Cluster with id <%s>", name)
 		return nil, errors.New("no such cluster")
 	}
 
 	delete(m.clusterCache, name)
 
-	fmt.Println("Unregistered Cluster <", name, ">")
+	log.Printf("Unregistered Cluster <%s>", name)
 
 	return cluster, nil
 

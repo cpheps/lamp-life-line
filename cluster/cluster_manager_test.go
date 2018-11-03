@@ -88,7 +88,6 @@ func TestUnregisterCluster(t *testing.T) {
 
 }
 
-
 func TestGetClusters(t *testing.T) {
 	manager := GetManagerInstance()
 	clearManager()
