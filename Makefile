@@ -4,7 +4,7 @@ BINARY=lamp-life-line
 VERSION=1.0.0
 BUILD_TIME=`date +%FT%T%z`
 
-LDFLAGS=-ldflags "-X github.com/cpheps/lamp-life-line/application.Version=${VERSION} -X github.com/cpheps/lamp-life-line/application.BuildTime=${BUILD_TIME}"
+LDFLAGS=-ldflags "-X github.com/cpheps/lamp-life-line/main.Version=${VERSION} -X github.com/cpheps/lamp-life-line/main.BuildTime=${BUILD_TIME}"
 
 .PHONY: build clean fmt run vet imports test
 default: build
@@ -16,19 +16,15 @@ clean:
 	if [ -f /bin/${BINARY} ] ; then rm bin/${BINARY} ; fi
 	if [ -f /bin/application ] ; then rm bin/application ; fi
 
-fmt: imports
-	go fmt github.com/cpheps/lamp-life-line/...
+fmt: 
+	@echo Formatting
+	@goimports -w .
+	@gofmt -s -w .
 
 run:
 	go run application.go
 
-vet:
-	go tool vet .
-
-imports:
-	goimports -w .
-
 test:
 #Add other package tests here
-	go test -v ./...
+	go test ./...
 	

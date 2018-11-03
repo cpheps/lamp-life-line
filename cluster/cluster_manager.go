@@ -2,9 +2,8 @@ package cluster
 
 import (
 	"fmt"
+	"errors"
 	"sync"
-
-	"github.com/satori/go.uuid"
 )
 
 //Manager handles cluster lifecycle
@@ -35,20 +34,19 @@ func createManager() *Manager {
 //RegisterNewCluster creates a new cluster and registers to manager
 func (m *Manager) RegisterNewCluster(name string, color uint32) *Cluster {
 	fmt.Printf("Registering new Cluster with name <%s>\n", name)
-	clusterID := generateUUID(m.clusterCache)
-	cluster := CreateCluster(&clusterID, &name, &color)
-	m.clusterCache[clusterID] = cluster
+	cluster := CreateCluster(name, color)
+	m.clusterCache[name] = cluster
 
-	fmt.Printf("Registered Cluster <%s> with assigned id <%s>\n", name, clusterID)
+	fmt.Println("Registered Cluster <",name, ">")
 	return cluster
 }
 
 //GetCluster retrieves a cluster with a given id
-func (m *Manager) GetCluster(clusterID string) (*Cluster, error) {
-	cluster := m.clusterCache[clusterID]
+func (m *Manager) GetCluster(clusterName string) (*Cluster, error) {
+	cluster := m.clusterCache[clusterName]
 
 	if cluster == nil {
-		return nil, fmt.Errorf("No cluster with id <%s> found", clusterID)
+		return nil, fmt.Errorf("No cluster with id <%s> found", clusterName)
 	}
 
 	return cluster, nil
@@ -66,25 +64,19 @@ func (m *Manager) GetClusters() []*Cluster {
 
 //UnregisterCluster removes the cluster form the manager.
 //Returns an error if no cluster is found
-func (m *Manager) UnregisterCluster(id string) (*Cluster, error) {
-	fmt.Printf("Unregistering new Cluster with id <%s>\n", id)
-	cluster := m.clusterCache[id]
+func (m *Manager) UnregisterCluster(name string) (*Cluster, error) {
+	fmt.Println("Unregistering new Cluster with id <", name, ">")
+	cluster := m.clusterCache[name]
 
 	if cluster == nil {
-		fmt.Printf("Failed to ungregister Cluster with id <%sn", id)
-		return nil, fmt.Errorf("No Cluster with id <%s> in cache", id)
+		fmt.Println("Failed to unregister Cluster with id <", name, ">")
+		return nil, errors.New("no such cluster")
 	}
 
-	delete(m.clusterCache, id)
+	delete(m.clusterCache, name)
 
-	fmt.Printf("Unregistered Cluster <%s> with assigned id <%s>\n", *cluster.Name, id)
+	fmt.Println("Unregistered Cluster <", name, ">")
 
 	return cluster, nil
-}
 
-func generateUUID(clusterCache map[string]*Cluster) string {
-	id := uuid.NewV4().String()
-	for ; clusterCache[id] != nil; id = uuid.NewV4().String() {
-	}
-	return id
 }
