@@ -1,6 +1,6 @@
 BINARY=lamp-life-line
 
-.PHONY: build clean fmt run vet imports test
+.PHONY: build clean fmt run test
 default: build
 
 build: | clean
