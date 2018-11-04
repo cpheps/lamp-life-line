@@ -26,7 +26,7 @@
 
 [metadata.heroku]
   root-package = "github.com/cpheps/lamp-life-line"
-  go-version = "1.11.2"
+  go-version = "1.11.1"
   install = [ "./..." ]
 
 
