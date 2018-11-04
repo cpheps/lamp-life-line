@@ -1,0 +1,1 @@
+web: lamp-life-line
