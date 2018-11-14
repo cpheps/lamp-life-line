@@ -15,7 +15,7 @@ type Manager struct {
 var instance *Manager
 var once sync.Once
 
-//GetManagerInstance returns singleton ClusterManager
+//GetManagerInstance returns singleton Manager
 func GetManagerInstance() *Manager {
 	once.Do(func() {
 		instance = createManager()
