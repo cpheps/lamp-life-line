@@ -41,7 +41,10 @@ func handleClusterPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newCluster := cluster.GetManagerInstance().RegisterNewCluster(*postCluster.Name, *postCluster.Color)
+	newCluster, err := cluster.GetManagerInstance().RegisterNewCluster(*postCluster.Name, *postCluster.Color)
+	if err != nil {
+		common.WriteError(http.StatusInternalServerError, "error registering new cluster", w)
+	}
 
 	data, err := json.Marshal(newCluster)
 	if err != nil {

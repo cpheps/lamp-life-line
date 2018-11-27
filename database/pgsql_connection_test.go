@@ -13,7 +13,7 @@ func Test_PGSQLConnection_GetCluster(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"cluster_name", "color"}).AddRow("myCluster", 1234)
 	mock.ExpectQuery(`SELECT \* FROM clusters WHERE cluster_name=myCluster`).WillReturnRows(rows)
 
-	expected := &PGSQLCluster{
+	expected := &ClusterModel{
 		Name:  "myCluster",
 		Color: 1234,
 	}
@@ -36,7 +36,7 @@ func Test_PGSQLConnection_GetAllClusters(t *testing.T) {
 		AddRow("yourCluster", 4567)
 	mock.ExpectQuery(`SELECT \* FROM clusters`).WillReturnRows(rows)
 
-	expected := []PGSQLCluster{
+	expected := []ClusterModel{
 		{
 			Name:  "myCluster",
 			Color: 1234,
@@ -60,7 +60,7 @@ func Test_PGSQLConnection_GetAllClusters(t *testing.T) {
 func Test_PGSQLConnection_UpdateCluster(t *testing.T) {
 	conn, mock := CreateMockSQL(t)
 
-	input := &PGSQLCluster{
+	input := &ClusterModel{
 		Name:  "myCluster",
 		Color: 1234,
 	}
@@ -80,7 +80,7 @@ func Test_PGSQLConnection_UpdateCluster(t *testing.T) {
 func Test_PGSQLConnection_CreateCluster(t *testing.T) {
 	conn, mock := CreateMockSQL(t)
 
-	input := &PGSQLCluster{
+	input := &ClusterModel{
 		Name:  "myCluster",
 		Color: 1234,
 	}

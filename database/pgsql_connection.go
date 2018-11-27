@@ -36,8 +36,8 @@ func NewConnection() (*PGSQLConnection, error) {
 }
 
 // GetCluster retrieves the cluster associated with clusterName
-func (p PGSQLConnection) GetCluster(clusterName string) (*PGSQLCluster, error) {
-	cluster := new(PGSQLCluster)
+func (p PGSQLConnection) GetCluster(clusterName string) (*ClusterModel, error) {
+	cluster := new(ClusterModel)
 	if err := p.connection.Get(cluster, fmt.Sprintf("SELECT * FROM clusters WHERE cluster_name=%s", clusterName)); err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (p PGSQLConnection) GetCluster(clusterName string) (*PGSQLCluster, error) {
 }
 
 // UpdateCluster updates a clusters color in the database
-func (p PGSQLConnection) UpdateCluster(cluster *PGSQLCluster) error {
+func (p PGSQLConnection) UpdateCluster(cluster *ClusterModel) error {
 	tx, err := p.connection.Beginx()
 	if err != nil {
 		return err
@@ -61,8 +61,8 @@ func (p PGSQLConnection) UpdateCluster(cluster *PGSQLCluster) error {
 }
 
 // GetAllClusters retrieves all clusters in database
-func (p PGSQLConnection) GetAllClusters() ([]PGSQLCluster, error) {
-	clusters := []PGSQLCluster{}
+func (p PGSQLConnection) GetAllClusters() ([]ClusterModel, error) {
+	clusters := []ClusterModel{}
 	if err := p.connection.Select(&clusters, "SELECT * FROM clusters"); err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (p PGSQLConnection) GetAllClusters() ([]PGSQLCluster, error) {
 }
 
 // CreateCluster inserts a new cluster into the database
-func (p PGSQLConnection) CreateCluster(cluster *PGSQLCluster) error {
+func (p PGSQLConnection) CreateCluster(cluster *ClusterModel) error {
 	tx, err := p.connection.Beginx()
 	if err != nil {
 		return err
