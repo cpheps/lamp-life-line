@@ -96,3 +96,23 @@ func Test_PGSQLConnection_CreateCluster(t *testing.T) {
 		t.Fatalf("Unexpected error: %s", err.Error())
 	}
 }
+
+func Test_PGSQLConnection_DeleteCluster(t *testing.T) {
+	conn, mock := CreateMockSQL(t)
+
+	input := &ClusterModel{
+		Name:  "myCluster",
+		Color: 1234,
+	}
+
+	mock.ExpectBegin()
+	mock.ExpectExec(`^DELETE FROM clusters.*`).
+		WithArgs("myCluster").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	err := conn.DeleteCluster(input)
+	if err != nil {
+		t.Fatalf("Unexpected error: %s", err.Error())
+	}
+}

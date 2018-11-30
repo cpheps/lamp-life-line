@@ -84,3 +84,18 @@ func (p PGSQLConnection) CreateCluster(cluster *ClusterModel) error {
 
 	return tx.Commit()
 }
+
+// DeleteCluster deletes the cluster from the database
+func (p PGSQLConnection) DeleteCluster(cluster *ClusterModel) error {
+	tx, err := p.connection.Beginx()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.NamedExec("DELETE FROM clusters WHERE cluster_name = :cluster_name", cluster)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

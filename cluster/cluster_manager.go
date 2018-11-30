@@ -15,6 +15,9 @@ type Manager struct {
 	conn         database.DBConnection
 }
 
+// ErrFailedDelete represents a Database failure to delete a cluster
+var ErrFailedDelete = errors.New("unable to delete cluster")
+
 var instance *Manager
 var once sync.Once
 
@@ -55,12 +58,14 @@ func (m *Manager) SetDBConnection(conn database.DBConnection) {
 func (m *Manager) RegisterNewCluster(name string, color uint32) (*Cluster, error) {
 	log.Printf("Registering new Cluster with name <%s>", name)
 	cluster := CreateCluster(name, color)
-	m.clusterCache[name] = cluster
 
 	if err := m.conn.CreateCluster(cluster.ToDBModel()); err != nil {
 		log.Printf("Failed to save to Database: %s", err.Error())
 		return nil, err
 	}
+
+	// Don't cache unless we can put in database
+	m.clusterCache[name] = cluster
 
 	log.Printf("Registered Cluster <%s>", name)
 	return cluster, nil
@@ -72,8 +77,8 @@ func (m *Manager) GetCluster(clusterName string) (*Cluster, error) {
 	if !ok {
 		model, err := m.conn.GetCluster(clusterName)
 		if err != nil {
-			log.Print("Failed to lookup cluster in Database: %s", err.Error())
-			return nil, errors.New("no cluster found")
+			log.Printf("Failed to lookup cluster in Database: %s", err.Error())
+			return nil, errors.New("unable to find cluster")
 		}
 
 		cluster = FromDBModel(model)
@@ -99,14 +104,39 @@ func (m *Manager) UnregisterCluster(name string) (*Cluster, error) {
 	cluster := m.clusterCache[name]
 
 	if cluster == nil {
-		log.Printf("Failed to unregister Cluster with id <%s>", name)
+		log.Printf("Failed to unregister Cluster <%s>", name)
 		return nil, errors.New("no such cluster")
 	}
 
+	if err := m.conn.DeleteCluster(cluster.ToDBModel()); err != nil {
+		log.Printf("Failed to remove cluster from Database: %s", err.Error())
+		return nil, errors.New("unable to delete cluster")
+	}
+
+	// Do not remove from cache until we delete from database
 	delete(m.clusterCache, name)
 
 	log.Printf("Unregistered Cluster <%s>", name)
 
 	return cluster, nil
 
+}
+
+// SetClusterColor sets the color of a cluster
+func (m *Manager) SetClusterColor(name string, color uint32) (*Cluster, error) {
+	cluster, err := m.GetCluster(name)
+	if err != nil {
+		return nil, err
+	}
+
+	cluster.Color = &color
+
+	err = m.conn.UpdateCluster(cluster.ToDBModel())
+	// The cluster will still have the color until sotred in memory so don't return an error
+	// but rather log
+	if err != nil {
+		log.Printf("Failed to update Cluster <%s> color in Database", *cluster.Name)
+	}
+
+	return cluster, nil
 }

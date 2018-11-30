@@ -91,7 +91,11 @@ func handleClusterDelete(w http.ResponseWriter, r *http.Request) {
 
 	_, err := cluster.GetManagerInstance().UnregisterCluster(clusterName)
 	if err != nil {
-		common.WriteError(http.StatusBadRequest, err.Error(), w)
+		if err == cluster.ErrFailedDelete {
+			common.WriteError(http.StatusInternalServerError, err.Error(), w)
+		} else {
+			common.WriteError(http.StatusBadRequest, err.Error(), w)
+		}
 		return
 	}
 }
@@ -108,13 +112,11 @@ func handleColorPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cluster, err := cluster.GetManagerInstance().GetCluster(clusterName)
+	cluster, err := cluster.GetManagerInstance().SetClusterColor(clusterName, colorMessage.Color)
 	if err != nil {
 		common.WriteError(http.StatusNotFound, err.Error(), w)
 		return
 	}
-
-	cluster.Color = &colorMessage.Color
 
 	data, err := json.Marshal(cluster)
 	if err != nil {

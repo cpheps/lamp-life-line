@@ -6,4 +6,5 @@ type DBConnection interface {
 	UpdateCluster(cluster *ClusterModel) error
 	GetAllClusters() ([]ClusterModel, error)
 	CreateCluster(cluster *ClusterModel) error
+	DeleteCluster(cluster *ClusterModel) error
 }
