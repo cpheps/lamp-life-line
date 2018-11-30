@@ -39,6 +39,7 @@ func createManager() *Manager {
 
 // SetDBConnection sets the database connection for this manager
 func (m *Manager) SetDBConnection(conn database.DBConnection) {
+	log.Print("Setting DB Connection")
 	m.conn = conn
 
 	// load all models as clusers from the database
@@ -73,6 +74,7 @@ func (m *Manager) RegisterNewCluster(name string, color uint32) (*Cluster, error
 
 //GetCluster retrieves a cluster with a given id
 func (m *Manager) GetCluster(clusterName string) (*Cluster, error) {
+	log.Printf("Getting Cluster <%s>", clusterName)
 	cluster, ok := m.clusterCache[clusterName]
 	if !ok {
 		model, err := m.conn.GetCluster(clusterName)
@@ -89,6 +91,7 @@ func (m *Manager) GetCluster(clusterName string) (*Cluster, error) {
 
 //GetClusters returns all clusters being managed
 func (m *Manager) GetClusters() []*Cluster {
+	log.Print("Getting all Clusters")
 	clusters := make([]*Cluster, 0, len(m.clusterCache))
 	for _, cluster := range m.clusterCache {
 		clusters = append(clusters, cluster)
@@ -100,7 +103,7 @@ func (m *Manager) GetClusters() []*Cluster {
 //UnregisterCluster removes the cluster form the manager.
 //Returns an error if no cluster is found
 func (m *Manager) UnregisterCluster(name string) (*Cluster, error) {
-	log.Printf("Unregistering new Cluster with name <%s>", name)
+	log.Printf("Unregistering Cluster with name <%s>", name)
 	cluster := m.clusterCache[name]
 
 	if cluster == nil {
@@ -124,6 +127,7 @@ func (m *Manager) UnregisterCluster(name string) (*Cluster, error) {
 
 // SetClusterColor sets the color of a cluster
 func (m *Manager) SetClusterColor(name string, color uint32) (*Cluster, error) {
+	log.Printf("Changing Cluster <%s> to color %d", name, color)
 	cluster, err := m.GetCluster(name)
 	if err != nil {
 		return nil, err
