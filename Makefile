@@ -1,6 +1,6 @@
 BINARY=lamp-life-line
 
-.PHONY: build clean fmt run test
+.PHONY: build clean fmt test
 default: build
 
 build: | clean
@@ -9,11 +9,6 @@ build: | clean
 clean:
 	if [ -f /bin/${BINARY} ] ; then rm bin/${BINARY} ; fi
 	if [ -f /bin/application ] ; then rm bin/application ; fi
-
-fmt: 
-	@echo Formatting
-	@goimports -w .
-	@gofmt -s -w .
 
 run:
 	go run application.go
