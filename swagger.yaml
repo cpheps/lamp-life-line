@@ -1,0 +1,186 @@
+swagger: "2.0"
+info:
+  title: Lamp Life Line API
+  description: RESTful API for lamp clusters to communicate
+  version: ''
+  license:
+    name: "MIT"
+    url: "https://mit-license.org/"
+
+basePath: "/v1"
+
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /cluster:
+    get:
+      summary: Returns a list of clusters.
+      operationId: listClusters
+      responses:
+        200:
+          description: List of clusters
+          schema:
+            $ref: "#/definitions/Clusters"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      summary: Create a cluster
+      operationId: createCluster
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Cluster"
+      responses:
+        200:
+          description: Successful cluster creation
+          schema:
+            $ref: "#/definitions/Cluster"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Error"
+  /cluster/{cluster_name}:
+    get:
+      summary: Get cluster details
+      operationId: getCluster
+      parameters:
+        - name: cluster_name
+          description: name of cluster
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: The Cluster information
+          schema:
+            $ref: "#/definitions/Cluster"
+        404:
+          description: No such cluster
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      summary: Delete a cluster
+      operationId: deleteCluster
+      parameters:
+        - name: cluster_name
+          description: name of cluster
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: Cluster deleted
+        404:
+          description: No such cluster
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Error"
+  /cluster/{cluster_name}/color:
+    get:
+      summary: Gets current cluster color
+      operationId: getColor
+      parameters:
+        - name: cluster_name
+          description: name of cluster
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Color of Cluster
+          schema:
+            $ref: "#/definitions/ClusterColor"
+        404:
+          description: No such cluster
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      summary: Sets current cluster color
+      operationId: setColor
+      parameters:
+        - name: cluster_name
+          description: name of cluster
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Color of Cluster
+          schema:
+            $ref: "#/definitions/Cluster"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: No such cluster
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Error"
+      
+
+definitions:
+  Clusters:
+    type: array
+    items:
+      $ref: "#/definitions/Cluster"
+  Cluster:
+    type: object
+    required:
+      - name
+      - color
+    description:
+      Single Cluster Info.
+    properties:
+      name:
+        type: string
+        description: Name of the cluster
+      color:
+        type: integer
+        description: 32 bit integer representing color of GGRRBB.
+  ClusterColor:
+    type: object
+    required:
+      - color
+    description: Color of a cluster
+    properties:
+      color:
+        type: integer
+        description: 32 bit integer representing color of GGRRBB.
+  Error:
+    type: object
+    required:
+      - error
+    description:
+      Error message.
+    properties:
+      error:
+        type: string
+        description: Error message

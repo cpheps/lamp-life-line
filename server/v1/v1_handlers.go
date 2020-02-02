@@ -61,7 +61,7 @@ func handleClusterGet(w http.ResponseWriter, r *http.Request) {
 
 	cluster, err := cluster.GetManagerInstance().GetCluster(clusterName)
 	if err != nil {
-		common.WriteError(http.StatusBadRequest, err.Error(), w)
+		common.WriteError(http.StatusNotFound, err.Error(), w)
 		return
 	}
 
@@ -94,10 +94,12 @@ func handleClusterDelete(w http.ResponseWriter, r *http.Request) {
 		if err == cluster.ErrFailedDelete {
 			common.WriteError(http.StatusInternalServerError, err.Error(), w)
 		} else {
-			common.WriteError(http.StatusBadRequest, err.Error(), w)
+			common.WriteError(http.StatusNotFound, err.Error(), w)
 		}
 		return
 	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // Color Calls
